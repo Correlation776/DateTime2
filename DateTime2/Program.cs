@@ -10,45 +10,40 @@ namespace DateTime2
             Console.WriteLine(firstDate.GetDayOfWeek());
         }
 
-        public static string[] DaysOfWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", 
-            "Friday", "Saturday", "Sunday"};
+        public static int[] DaysOfWeek = {1, 2, 3, 4, 5, 6, 7};
+
+        public static int[] DaysInMonths = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         
         struct Date
         {
-            public int Day;
-            public int Month;
-            public int Year;
-
+            private readonly int day;
+            private readonly int month;
+            private readonly int year;
             public Date(int day, int month, int year)
             {
-                Day = day;
-                Month = month;
-                Year = year;
+                this.day = day;
+                this.month = month;
+                this.year = year;
             }
 
-            public string GetDayOfWeek()
+            public int GetDayOfWeek()
             {
+                int days = day;
                 int leapDays = 0;
-                for (int i = 1900; i <= Year; i++)
+                for (int i = 1900; i <= year; i++)
                 {
-                    if (Year % 100 != 0 && Year % 4 == 0 || Year % 400 == 0)
+                    if (i % 100 != 0 && i % 4 == 0 || i % 400 == 0)
                         leapDays++;
                 }
-                int days = Day;
-                switch (Month)
+
+                for (int i = 0; i < month; i++)
                 {
-                    case 1:
-                        break;
-                    case 2:
-                        days += 31;
-                        break;
-                    default:
-                        days += 28 + 30 * (Month / 2) + 31 * (Month / 2) + leapDays;
-                        break;
+                    days += DaysInMonths[i];
                 }
-                days += 365 * (Year - 1900 + 1);
                 
-                return DaysOfWeek[days % 7];
+                days += 365 * (year - 1900) + leapDays;
+                
+                return DaysOfWeek[days % 7 - 1];
             }
         }
     }
