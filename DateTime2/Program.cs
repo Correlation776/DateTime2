@@ -6,11 +6,11 @@ namespace DateTime2
     {
         static void Main()
         {
-            Date firstDate = new Date(15, 5, 2005);
+            Date firstDate = new Date(12, 02, 2004);
             Console.WriteLine(firstDate.GetDayOfWeek());
         }
 
-        public static int[] DaysOfWeek = {1, 2, 3, 4, 5, 6, 7};
+       
 
         public static int[] DaysInMonths = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         
@@ -32,18 +32,18 @@ namespace DateTime2
                 int leapDays = 0;
                 for (int i = 1900; i <= year; i++)
                 {
-                    if (i % 100 != 0 && i % 4 == 0 || i % 400 == 0)
+                    if ((i % 100 != 0 && i % 4 == 0 || i % 400 == 0) && (i != year || month > 2))
                         leapDays++;
                 }
 
-                for (int i = 0; i < month; i++)
+                for (int i = 0; i < month - 1; i++)
                 {
                     days += DaysInMonths[i];
                 }
                 
                 days += 365 * (year - 1900) + leapDays;
                 
-                return DaysOfWeek[days % 7 - 1];
+                return days % 7;
             }
         }
     }
