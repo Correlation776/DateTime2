@@ -1,6 +1,6 @@
 namespace DateTime2
 {
-    readonly struct Date
+    public readonly struct Date
     {
         private static readonly int[] DaysInMonths = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
