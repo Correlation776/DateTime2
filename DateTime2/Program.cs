@@ -10,8 +10,9 @@ namespace DateTime2
     {
         static void Main()
         {
-            Date firstDate = new Date(10, 9, 2023);
-            Date secondDate = new Date(22, 9, 2023);
+            Console.WriteLine("Enter two dates (DD.MM.YYYY):");
+            Date firstDate = (Date)Date.TryParse(Console.ReadLine());
+            Date secondDate = (Date)Date.TryParse(Console.ReadLine());
             Console.WriteLine((secondDate.GetClosestMonday(false) - firstDate.GetClosestMonday(true)) / 7);
         }
     }

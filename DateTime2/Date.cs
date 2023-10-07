@@ -1,18 +1,48 @@
 namespace DateTime2
 {
-    public readonly struct Date
+    public struct Date
     {
         private static readonly int[] DaysInMonths = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-        private readonly int day;
-        private readonly int month;
-        private readonly int year;
+        private int day;
+        private int month;
+        private int year;
 
         public Date(int day, int month, int year)
         {
             this.day = day;
             this.month = month;
             this.year = year;
+        }
+
+        public static Date? TryParse(string input)
+        {
+            Date result = new Date();
+            string[] temp = input.Split('.');
+            int.TryParse(temp[0], out result.day);
+            int.TryParse(temp[1], out result.month);
+            int.TryParse(temp[2], out result.year);
+            if (result.day < 1 || result.month < 1 || result.month > 12)
+                return null;
+            switch (result.month)
+            {
+                case 1:
+                case 3:
+                case 5:
+                case 7:
+                case 8:
+                case 10:
+                case 12:
+                    if (result.day > 31) return null;
+                    break;
+                case 2:
+                    if (result.year % 4 == 0 && result.year % 100 != 0 && result.day > 29 || result.day > 28) return null;
+                    break;
+                default:
+                    if (result.day > 30) return null;
+                    break;
+            }
+            return result;
         }
 
         public int GetClosestMonday(bool next)
