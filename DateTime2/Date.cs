@@ -1,3 +1,5 @@
+using System;
+
 namespace DateTime2
 {
     public struct Date
@@ -15,37 +17,40 @@ namespace DateTime2
             this.year = year;
         }
 
-        public static Date? TryParse(string input)
+        public static Date TryParse(string input)
         {
             Date result = new Date();
             string[] temp = input.Split('.');
-            int.TryParse(temp[0], out result.day);
-            int.TryParse(temp[1], out result.month);
-            int.TryParse(temp[2], out result.year);
-            if (result.day < 1 || result.month < 1 || result.month > 12)
-                return null;
-            switch (result.month)
+            try
             {
-                case 1:
-                case 3:
-                case 5:
-                case 7:
-                case 8:
-                case 10:
-                case 12:
-                    if (result.day > 31) return null;
-                    break;
-                case 2:
-                    if (result.year % 4 == 0 && result.year % 100 != 0 && result.day > 29 || result.day > 28) return null;
-                    break;
-                default:
-                    if (result.day > 30) return null;
-                    break;
+                int.TryParse(temp[0], out result.day);
+                int.TryParse(temp[1], out result.month);
+                int.TryParse(temp[2], out result.year);
             }
+            catch (IndexOutOfRangeException)
+            {
+                throw new InvalidDateException("enter a valid date please");
+            }
+            
+            if (result.day < 1 || result.month < 1 || result.month > 12)
+                throw new InvalidDateException(result.day < 1 ? "day must be 1 or higher" : "month must be between 1 and 12");
+            if (result.day > DaysInMonths[result.month - 1] && result.month != 2)
+                throw new InvalidDateException("there aren't that many days in this month");
+            if (result.month == 2 && result.year % 4 == 0 && result.year % 100 != 0 && result.day > 29)
+                throw new InvalidDateException("even in a leap year there's only 29 days in february");
+            if (result.year < 1900)
+                throw new InvalidDateException("it only works with 01.01.1900 onward");
+            
             return result;
         }
 
-        public int GetClosestMonday(bool next)
+        public static void CheckIfSecondLater(Date first, Date second)
+        {
+            if (first.GetNumberOfDays() > second.GetNumberOfDays())
+                throw new InvalidDateException("the second date must be later than the first");
+        }
+
+        int GetNumberOfDays()
         {
             int days = day;
             int leapDays = 0;
@@ -61,6 +66,12 @@ namespace DateTime2
             }
 
             days += 365 * (year - 1900) + leapDays;
+            return days;
+        }
+
+        public int GetClosestMonday(bool next)
+        {
+            int days = GetNumberOfDays();
             int weekDay = days % 7 == 0 ? 7 : days % 7;
             if (weekDay == 1) return days;
             if (next) return days + 8 - weekDay;

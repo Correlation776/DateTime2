@@ -11,9 +11,20 @@ namespace DateTime2
         static void Main()
         {
             Console.WriteLine("Enter two dates (DD.MM.YYYY):");
-            Date firstDate = (Date)Date.TryParse(Console.ReadLine());
-            Date secondDate = (Date)Date.TryParse(Console.ReadLine());
-            Console.WriteLine((secondDate.GetClosestMonday(false) - firstDate.GetClosestMonday(true)) / 7);
+            
+            try
+            {
+                Date firstDate = Date.TryParse(Console.ReadLine());
+                Date secondDate = Date.TryParse(Console.ReadLine());
+                Date.CheckIfSecondLater(firstDate, secondDate);
+                if (firstDate.GetClosestMonday(true) > secondDate.GetClosestMonday(false)) Console.WriteLine(0);
+                else Console.WriteLine(Math.Abs(secondDate.GetClosestMonday(false) - firstDate.GetClosestMonday(true)) / 7);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
         }
     }
 }
