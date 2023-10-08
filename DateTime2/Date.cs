@@ -34,9 +34,9 @@ namespace DateTime2
             
             if (result.day < 1 || result.month < 1 || result.month > 12)
                 throw new InvalidDateException(result.day < 1 ? "day must be 1 or higher" : "month must be between 1 and 12");
-            if (result.day > DaysInMonths[result.month - 1] && result.month != 2)
+            if (result.day > DaysInMonths[result.month - 1] && !(result.year % 4 == 0 && result.year % 100 != 0 || result.year % 400 == 0))
                 throw new InvalidDateException("there aren't that many days in this month");
-            if (result.month == 2 && result.year % 4 == 0 && result.year % 100 != 0 && result.day > 29)
+            if (result.month == 2 && (result.year % 4 == 0 && result.year % 100 != 0 || result.year % 400 == 0) && result.day > 29)
                 throw new InvalidDateException("even in a leap year there's only 29 days in february");
             if (result.year < 1900)
                 throw new InvalidDateException("it only works with 01.01.1900 onward");
